@@ -1,11 +1,5 @@
-const word = document.querySelector('div.word');
-const spans = document.querySelectorAll('div.word span');
-
-
-for (let span of spans) {
-    console.log(span);
-
-}
+const wordChoose = document.querySelector('div.word');
+let wordNow;
 
 function getRandomWord() {
     const theWords = [
@@ -27,6 +21,7 @@ function getRandomWord() {
     let number = Math.floor(Math.random() * (max - min) + min);
 
 
+    //p.s. твои ифы можно заменить на theWords[number] — будет по смыслу то же, но куда лаконичнее
     if (number == 0) {
         number = theWords[0];
     } else if (number == 1) {
@@ -51,22 +46,35 @@ function getRandomWord() {
         number = theWords[10];
     };
 
-
-    for (let i = 0; i < number.length; i++) {
-        console.log(number[i]);
-        document.addEventListener("keydown", highlight);
-
-        function highlight(event) {
-            if (event.key == number[i]) {
-                //тогда она подсвечивается зеленым 
-                spans[i].className = "c";
-            } else {
-                // красным
-                spans[i].className = "w";
-            }
-        };
-    }
-
-    word.textContent = `${number}`;
+    return wordNow = number;
 }
 getRandomWord();
+
+
+//функция — это чтобы слово разбить на буквы и обернуть в спаны
+function spanWord(word) {
+    wordChoose.innerHTML = word.split("").map((it) => `<span>${it}</span>`).join("");
+
+}
+spanWord(wordNow);
+
+let i = 0;
+document.addEventListener("keypress", (event) => {
+    const spans = wordChoose.querySelectorAll("span");
+    if (event.key === wordNow[i]) {
+        spans[i].className = "c";
+        i++;
+    } else {
+        event.key === wordNow[i];
+        spans[i].className = "w";
+        //не знаю что такое в нижних 2-х строчках, но без них не работает правильно
+        wordMistake.textContent = ++wordMistake.textContent;
+        wrongCount.textContent = ++wrongCount.textContent;
+        //
+        i++;
+    }
+    //if (i === length.newWord) {
+    //correctCount.textContent = ++correctCount.textContent;
+    //setTimeout(RandomNextWord);
+    // }
+})
