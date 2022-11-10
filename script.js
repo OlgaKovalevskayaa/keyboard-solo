@@ -1,5 +1,10 @@
 const wordChoose = document.querySelector('div.word');
 let wordNow;
+let i = 0;
+
+const wordMistake = document.querySelector('.word-mistakes');
+const wrongCount = document.querySelector('.wrong-count');
+const correctCount = document.querySelector('.correct-count');
 
 function getRandomWord() {
     const theWords = [
@@ -24,28 +29,9 @@ function getRandomWord() {
     //p.s. твои ифы можно заменить на theWords[number] — будет по смыслу то же, но куда лаконичнее
     if (number == 0) {
         number = theWords[0];
-    } else if (number == 1) {
-        number = theWords[1];
-    } else if (number == 2) {
-        number = theWords[2];
-    } else if (number == 3) {
-        number = theWords[3];
-    } else if (number == 4) {
-        number = theWords[4];
-    } else if (number == 5) {
-        number = theWords[5];
-    } else if (number == 6) {
-        number = theWords[6];
-    } else if (number == 7) {
-        number = theWords[7];
-    } else if (number == 8) {
-        number = theWords[8];
-    } else if (number == 9) {
-        number = theWords[9];
-    } else if (number == 10) {
-        number = theWords[10];
-    };
-
+    } else {
+        number = theWords[number];
+    }
     return wordNow = number;
 }
 getRandomWord();
@@ -58,7 +44,7 @@ function spanWord(word) {
 }
 spanWord(wordNow);
 
-let i = 0;
+
 document.addEventListener("keypress", (event) => {
     const spans = wordChoose.querySelectorAll("span");
     if (event.key === wordNow[i]) {
@@ -67,14 +53,15 @@ document.addEventListener("keypress", (event) => {
     } else {
         event.key === wordNow[i];
         spans[i].className = "w";
-        //не знаю что такое в нижних 2-х строчках, но без них не работает правильно
         wordMistake.textContent = ++wordMistake.textContent;
         wrongCount.textContent = ++wrongCount.textContent;
-        //
-        i++;
     }
-    //if (i === length.newWord) {
-    //correctCount.textContent = ++correctCount.textContent;
-    //setTimeout(RandomNextWord);
-    // }
+    if (i == wordNow.length) {
+        correctCount.textContent = ++correctCount.textContent;
+        setTimeout(() => {
+            getRandomWord();
+            spanWord(wordNow);
+            i = 0;
+        }, 1000)
+    }
 })
