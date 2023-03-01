@@ -1,67 +1,95 @@
-const wordChoose = document.querySelector('div.word');
-let wordNow;
-let i = 0;
+const workWord = document.querySelector(".word");
 
-const wordMistake = document.querySelector('.word-mistakes');
-const wrongCount = document.querySelector('.wrong-count');
-const correctCount = document.querySelector('.correct-count');
+const correctCount = document.querySelector(".correct-count");
+const wrongCount = document.querySelector(".wrong-count");
+const wordMistakes = document.querySelector(".word-mistakes");
 
+const timer = document.querySelector("#timer");
+
+//рандомные слова
 function getRandomWord() {
-    const theWords = [
-        "big",
-        "small",
-        "old",
-        "new",
-        "fast",
-        "slow",
-        "beautiful",
-        "ugly",
-        "cheap",
-        "expensive"
+    const arr = [
+        'chicken', 'rooster', 'turkey', 'gobbler', 'goat', 'kid',
+        'sheep', 'ram', 'lamb', 'bull', 'cow', 'calf',
+        'horse', 'stallon', 'colt', 'mare', 'pig', 'sow',
+        'piglet', 'rabbit', 'kit', 'doe', 'buck'
     ];
 
-    const min = 0;
-    const max = 10;
-
-    let number = Math.floor(Math.random() * (max - min) + min);
-
-
-    //p.s. твои ифы можно заменить на theWords[number] — будет по смыслу то же, но куда лаконичнее
-    if (number == 0) {
-        number = theWords[0];
-    } else {
-        number = theWords[number];
-    }
-    return wordNow = number;
+    const rand = Math.floor(Math.random() * (arr.length));
+    return arr[rand];
 }
-getRandomWord();
+
+let currentWord = getRandomWord();
+renderWord(currentWord);
 
 
 //функция — это чтобы слово разбить на буквы и обернуть в спаны
-function spanWord(word) {
-    wordChoose.innerHTML = word.split("").map((it) => `<span>${it}</span>`).join("");
-
+function renderWord(word) {
+    workWord.innerHTML = word.split("").map((char) => `<span>${char}</span>`).join("");
 }
-spanWord(wordNow);
 
+
+//обработчик события
+let rand = 0;
 
 document.addEventListener("keypress", (event) => {
-    const spans = wordChoose.querySelectorAll("span");
-    if (event.key === wordNow[i]) {
-        spans[i].className = "c";
-        i++;
+    console.log(event.key, currentWord);
+    if (event.key === currentWord[rand]) {
+        workWord.children[rand].className = "c";
+        rand++;
     } else {
-        event.key === wordNow[i];
-        spans[i].className = "w";
-        wordMistake.textContent = ++wordMistake.textContent;
+        workWord.children[rand].className = "w";
         wrongCount.textContent = ++wrongCount.textContent;
+        wordMistakes.textContent = ++wordMistakes.textContent;
     }
-    if (i == wordNow.length) {
+
+    if (rand === currentWord.length) {
         correctCount.textContent = ++correctCount.textContent;
-        setTimeout(() => {
-            getRandomWord();
-            spanWord(wordNow);
-            i = 0;
-        }, 1000)
+        setTimeout(nextWord, 0);
     }
-})
+
+});
+
+//вывод следующего слова
+function nextWord() {
+    checkWordsCount();
+    currentWord = getRandomWord();
+    renderWord(currentWord);
+    rand = 0;
+    wordMistakes.textContent = 0;
+}
+
+//итог
+function checkWordsCount() {
+    if (wrongCount.textContent >= 5) {
+        alert(`Вы проиграли :( Ваше время ${timer.textContent}`);
+        clearTimer();
+    }
+
+    if (correctCount.textContent >= 5) {
+        alert(`Победа! Ваше время ${timer.textContent}`);
+        clearTimer();
+    }
+
+}
+
+// таймер
+let seconds = "00";
+let minutes = "00";
+
+let timerFunction = setInterval(() => {
+    document.querySelector("#timer").innerHTML = `${minutes}:${seconds}`;
+
+    if (seconds < 59) {
+        seconds++;
+    } else {
+        minutes++;
+        seconds = 0;
+    }
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+}, 1000);
+
+function clearTimer() {
+    clearInterval(timerFunction);
+    timer.textContent = `00:00`;
+}
