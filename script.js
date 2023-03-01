@@ -33,7 +33,6 @@ function renderWord(word) {
 let rand = 0;
 
 document.addEventListener("keypress", (event) => {
-    console.log(event.key, currentWord);
     if (event.key === currentWord[rand]) {
         workWord.children[rand].className = "c";
         rand++;
@@ -63,12 +62,12 @@ function nextWord() {
 function checkWordsCount() {
     if (wrongCount.textContent >= 5) {
         alert(`Вы проиграли :( Ваше время ${timer.textContent}`);
-        clearTimer();
+        nuller();
     }
 
     if (correctCount.textContent >= 5) {
         alert(`Победа! Ваше время ${timer.textContent}`);
-        clearTimer();
+        nuller();
     }
 
 }
@@ -92,4 +91,11 @@ let timerFunction = setInterval(() => {
 function clearTimer() {
     clearInterval(timerFunction);
     timer.textContent = `00:00`;
+}
+
+function nuller() {
+    correctCount.textContent = 0;
+    wrongCount.textContent = 0;
+    wordMistakes.textContent = 0;
+    clearTimer();
 }
